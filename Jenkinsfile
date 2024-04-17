@@ -57,20 +57,19 @@ pipeline {
         
         stage('5. Static Code Analysis') {
             steps {
-                // Print current directory
-                sh 'pwd'
-                
-                // List files in the workspace
-                sh 'ls -l'
-                
-                // Run static code analysis tools
-                sh 'mvn clean compile checkstyle:checkstyle pmd:pmd findbugs:findbugs'
+                withMaven(globalMavenSettingsConfig: '', 
+                          jdk: '', maven: 'maven', 
+                          mavenSettingsConfig: '', 
+                          traceability: true){
+                    // Run static code analysis tools
+                    sh 'mvn clean compile checkstyle:checkstyle pmd:pmd findbugs:findbugs'
+                }
             }
         }
 
 
         
-        stage('5. Record Issues') {
+        stage('6. Record Issues') {
             steps {
                 // Record issues using the specified tools
                 recordIssues sourceCodeRetention: 'LAST_BUILD', tools: [

@@ -83,10 +83,18 @@ pipeline {
 
         
 
-        stage('Deliver') {
+        stage('7. Deliver') {
             steps {
-                // Step to release artifact (e.g., to Nexus or Artifactory)
-                sh 'mvn deploy'
+
+                withMaven(globalMavenSettingsConfig: '', 
+                          jdk: '', maven: 'maven', 
+                          mavenSettingsConfig: '', 
+                          traceability: true){
+                    // Step to release artifact (e.g., to Nexus or Artifactory)
+                    sh 'mvn deploy'
+                }
+                
+                
             }
         }
         // stage('Deploy to Dev Env') {

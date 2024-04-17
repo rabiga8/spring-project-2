@@ -2,13 +2,13 @@ pipeline {
     agent any
     environment {
         DOCKER_CREDENTIALS_ID = '5aec70f1-576f-4bbf-8388-65b31ae0113c'
-        DOCKER_IMAGE_NAME = 'rabiga8/group-image'
+        DOCKER_IMAGE_NAME = 'rabiga8/group-image-2'
     }
     stages {
         stage('Checkout') {
             steps {
                 // Check out the source code from GitHub
-                sh "git clone https://github.com/rabiga8/spring-project.git"
+                sh "git clone https://github.com/rabiga8/spring-project-2.git"
                 sh "git checkout main"
             }
         }

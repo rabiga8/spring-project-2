@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE_NAME = 'rabiga8/group-image-2'
     }
     stages {
-        stage('Checkout') {
+        stage('1. Checkout') {
             steps {
                 // Check out the source code from GitHub
                 sh "git clone https://github.com/rabiga8/spring-project-2.git"
@@ -13,9 +13,7 @@ pipeline {
             }
         }
 
-        // Uncomment and customize stages as needed
-        
-        stage('Test') {
+        stage('2. Test') {
             steps {
                 withMaven(globalMavenSettingsConfig: '', 
                           jdk: '', maven: 'maven', 
@@ -26,7 +24,7 @@ pipeline {
             }
         }
 
-        stage('Publish Code Coverage Report') {
+        stage('3. Code Coverage Report') {
             steps {
                 // Publish JaCoCo coverage report
                 jacoco(execPattern: 'target/jacoco.exec')
@@ -39,25 +37,7 @@ pipeline {
             }
         }
 
-        stage('Static Code Analysis') {
-            steps {
-                // Run static code analysis tools
-                sh 'mvn clean compile checkstyle:checkstyle pmd:pmd findbugs:findbugs'
-            }
-        }
-        stage('Record Issues') {
-            steps {
-                // Record issues using the specified tools
-                recordIssues sourceCodeRetention: 'LAST_BUILD', tools: [
-                    checkStyle(),
-                    pmdParser(),
-                    findBugs(useRankAsPriority: true)
-                ]
-            }
-        }
-        
-
-        stage('Build Maven') {
+        stage('4.Build Maven') {
             steps {
                 withMaven(globalMavenSettingsConfig: '', 
                           jdk: '', maven: 'maven', 
@@ -73,6 +53,26 @@ pipeline {
                 }
             }
         }
+
+        stage('5. Static Code Analysis') {
+            steps {
+                // Run static code analysis tools
+                sh 'mvn clean compile checkstyle:checkstyle pmd:pmd findbugs:findbugs'
+            }
+        }
+        stage('5. Record Issues') {
+            steps {
+                // Record issues using the specified tools
+                recordIssues sourceCodeRetention: 'LAST_BUILD', tools: [
+                    checkStyle(),
+                    pmdParser(),
+                    findBugs(useRankAsPriority: true)
+                ]
+            }
+        }
+        
+
+        
 
         stage('Deliver') {
             steps {

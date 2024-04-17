@@ -47,6 +47,35 @@ pipeline {
                 sh 'docker build -t ${DOCKER_IMAGE_NAME} .'
             }
         }
+
+        stage('8. Dockerhub Login') {
+            steps {
+                // Authenticate with Docker Hub using credentials
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: DOCKER_CREDENTIALS_ID, 
+                        passwordVariable: 'DOCKER_PASSWORD', 
+                        usernameVariable: 'DOCKER_USERNAME')
+                ]) {
+                    sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                }
+                    
+                // Build Docker image again
+                sh 'docker build  -t ${DOCKER_IMAGE_NAME} .'
+                    
+                // Tag the Docker image with Docker Hub repository name
+                sh 'docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}:latest'
+            }
+        }
+
+
+        stage('10. Dockerhub Push') {
+            steps {
+                // Push Docker image to Docker Hub
+                sh 'docker push ${DOCKER_IMAGE_NAME}:latest'
+            }
+        }
+        
         
         stage('4. Code Coverage Report') {
             steps {
@@ -90,33 +119,6 @@ pipeline {
 
      
 
-        stage('8. Dockerhub Login') {
-            steps {
-                // Authenticate with Docker Hub using credentials
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: DOCKER_CREDENTIALS_ID, 
-                        passwordVariable: 'DOCKER_PASSWORD', 
-                        usernameVariable: 'DOCKER_USERNAME')
-                ]) {
-                    sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-                }
-                    
-                // Build Docker image again
-                sh 'docker build  -t ${DOCKER_IMAGE_NAME} .'
-                    
-                // Tag the Docker image with Docker Hub repository name
-                sh 'docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}:latest'
-            }
-        }
-
-
-        stage('10. Dockerhub Push') {
-            steps {
-                // Push Docker image to Docker Hub
-                sh 'docker push ${DOCKER_IMAGE_NAME}:latest'
-            }
-        }
         
 
         // stage(' Deliver') {

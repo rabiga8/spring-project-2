@@ -1,4 +1,5 @@
-FROM openjdk:17-jdk
+FROM tomcat:latest
+COPY target/spring-project-2-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/
 EXPOSE 8080
-ADD target/spring-project-2-0.0.1-SNAPSHOT.war spring-project-2-0.0.1-SNAPSHOT.war
-ENTRYPOINT ["java", "-war", "/spring-project-2-0.0.1-SNAPSHOT.war"]
+CMD ["catalina.sh", "run"]
+

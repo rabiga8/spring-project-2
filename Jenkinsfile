@@ -26,13 +26,15 @@ pipeline {
             }
         }
 
-        stage('Code coverage analysis') {
+        stage('Publish Code Coverage Report') {
             steps {
-                withMaven(globalMavenSettingsConfig: '', 
-                          jdk: '', maven: 'maven', 
-                          mavenSettingsConfig: '', 
-                          traceability: true) {
-                    sh 'mvn clean verify'
+                // Publish JaCoCo coverage report
+                jacoco(execPattern: 'target/jacoco.exec')
+            }
+            post {
+                always {
+                    // Archive artifacts
+                    archiveArtifacts(artifacts: 'target/*.jar', fingerprint: true)
                 }
             }
         }

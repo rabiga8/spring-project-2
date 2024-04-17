@@ -14,7 +14,7 @@ pipeline {
         }
 
         // Uncomment and customize stages as needed
-        /*
+        
         stage('Test') {
             steps {
                 withMaven(globalMavenSettingsConfig: '', 
@@ -39,17 +39,23 @@ pipeline {
             }
         }
 
-        stage('Code static analysis') {
+        stage('Static Code Analysis') {
             steps {
-                withMaven(globalMavenSettingsConfig: '', 
-                          jdk: '', maven: 'maven', 
-                          mavenSettingsConfig: '', 
-                          traceability: true) {
-                    sh 'mvn checkstyle:checkstyle'
-                }
+                // Run static code analysis tools
+                sh 'mvn clean compile checkstyle:checkstyle pmd:pmd findbugs:findbugs'
             }
         }
-        */
+        stage('Record Issues') {
+            steps {
+                // Record issues using the specified tools
+                recordIssues sourceCodeRetention: 'LAST_BUILD', tools: [
+                    checkStyle(),
+                    pmdParser(),
+                    findBugs(useRankAsPriority: true)
+                ]
+            }
+        }
+        
 
         stage('Build Maven') {
             steps {
@@ -67,6 +73,49 @@ pipeline {
                 }
             }
         }
+
+        stage('Deliver') {
+            steps {
+                // Step to release artifact (e.g., to Nexus or Artifactory)
+                sh 'mvn deploy'
+            }
+        }
+        // stage('Deploy to Dev Env') {
+        //     when {
+        //         branch 'develop' // Deploy only from the develop branch
+        //     }
+        //     steps {
+        //         // Step to deploy artifact to Dev environment
+        //         sh 'kubectl apply -f dev.yaml' // Example command for Kubernetes deployment
+        //     }
+        // }
+        // stage('Deploy to QAT Env') {
+        //     when {
+        //         branch 'release/*' // Deploy only from release branches
+        //     }
+        //     steps {
+        //         // Step to deploy artifact to QAT environment
+        //         sh 'kubectl apply -f qat.yaml' // Example command for Kubernetes deployment
+        //     }
+        // }
+        // stage('Deploy to Staging Env') {
+        //     when {
+        //         branch 'staging' // Deploy only from the staging branch
+        //     }
+        //     steps {
+        //         // Step to deploy artifact to Staging environment
+        //         sh 'kubectl apply -f staging.yaml' // Example command for Kubernetes deployment
+        //     }
+        // }
+        // stage('Deploy to Production Env') {
+        //     when {
+        //         branch 'master' // Deploy only from the master branch
+        //     }
+        //     steps {
+        //         // Step to deploy artifact to Production environment
+        //         sh 'kubectl apply -f production.yaml' // Example command for Kubernetes deployment
+        //     }
+        // }
 
         // stage('Deploy to Tomcat server') {
         //     steps {
@@ -93,6 +142,9 @@ pipeline {
         //     }
         // }
 
+        
+
+        
         // Uncomment and customize stages as needed
         /*
         stage('Build Docker Image') {

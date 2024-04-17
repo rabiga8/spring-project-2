@@ -73,8 +73,9 @@ pipeline {
                     tomcat9(
                         credentialsId: 'tomcat-credentials', p
                         ath: '', 
-                        url: 'http://localhost:9999/')], 
-                    contextPath: null, war: '**/*.war'
+                        url: 'http://localhost:9999/'
+                    )], contextPath: null, war: '**/*.war'
+            }
         }
         
         // stage('Build Docker Image') {

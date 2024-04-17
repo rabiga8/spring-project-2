@@ -24,20 +24,7 @@ pipeline {
             }
         }
 
-        stage('3. Code Coverage Report') {
-            steps {
-                // Publish JaCoCo coverage report
-                jacoco(execPattern: 'target/jacoco.exec')
-            }
-            post {
-                always {
-                    // Archive artifacts
-                    archiveArtifacts(artifacts: 'target/*.war', fingerprint: true)
-                }
-            }
-        }
-
-        stage('4.Build Maven') {
+        stage('3.Build Maven') {
             steps {
                 withMaven(globalMavenSettingsConfig: '', 
                           jdk: '', maven: 'maven', 
@@ -53,6 +40,21 @@ pipeline {
                 }
             }
         }
+        
+        stage('4. Code Coverage Report') {
+            steps {
+                // Publish JaCoCo coverage report
+                jacoco(execPattern: 'target/jacoco.exec')
+            }
+            post {
+                always {
+                    // Archive artifacts
+                    archiveArtifacts(artifacts: 'target/*.war', fingerprint: true)
+                }
+            }
+        }
+
+        
 
         stage('5. Static Code Analysis') {
             steps {

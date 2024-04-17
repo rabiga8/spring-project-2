@@ -32,7 +32,7 @@ pipeline {
             post {
                 always {
                     // Archive artifacts
-                    archiveArtifacts(artifacts: 'target/*.jar', fingerprint: true)
+                    archiveArtifacts(artifacts: 'target/*.war', fingerprint: true)
                 }
             }
         }

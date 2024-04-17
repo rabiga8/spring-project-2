@@ -55,13 +55,21 @@ pipeline {
         }
 
         
-
         stage('5. Static Code Analysis') {
             steps {
+                // Print current directory
+                sh 'pwd'
+                
+                // List files in the workspace
+                sh 'ls -l'
+                
                 // Run static code analysis tools
                 sh 'mvn clean compile checkstyle:checkstyle pmd:pmd findbugs:findbugs'
             }
         }
+
+
+        
         stage('5. Record Issues') {
             steps {
                 // Record issues using the specified tools

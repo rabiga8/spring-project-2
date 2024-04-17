@@ -66,15 +66,28 @@ pipeline {
             }
         }
 
-        stage('Deploy to Tomcat server') {
+        // stage('Deploy to Tomcat server') {
+        //     steps {
+        //         deploy adapters: [
+        //             tomcat9(
+        //                 credentialsId: 'tomcat-credentials',
+        //                 path: '',
+        //                 url: 'http://localhost:9999/'
+        //             )
+        //         ], contextPath: null, war: '**/*.war'
+        //     }
+        // }
+
+        stage('Deploy to Tomcat') {
             steps {
-                deploy adapters: [
-                    tomcat9(
-                        credentialsId: 'tomcat-credentials',
-                        path: '',
-                        url: 'http://localhost:9999/'
-                    )
-                ], contextPath: null, war: '**/*.war'
+                // Deploy the WAR file to Tomcat
+                script {
+                    def tomcatUrl = 'http://localhost:9999'
+                    def warFileName = sh(script: 'ls target/*.war', returnStdout: true).trim()
+                    def credentialsId = 'tomcat-credentials'
+                    
+                    tomcatDeploy adapter: [credentialsId: credentialsId, url: tomcatUrl], war: warFileName
+                }
             }
         }
 

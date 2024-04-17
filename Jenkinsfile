@@ -69,8 +69,12 @@ pipeline {
 
         stage('Deploy to Tomcat server'){
             steps{
-                deploy adapters: [tomcat9(credentialsId: 'b53a8e69-9559-416f-a883-ffb83f8a9a3c', path: '', url: 'http://localhost:9999/')], contextPath: null, war: '**/*.war'
-            }
+                deploy adapters: [
+                    tomcat9(
+                        credentialsId: 'tomcat-credentials', p
+                        ath: '', 
+                        url: 'http://localhost:9999/')], 
+                    contextPath: null, war: '**/*.war'
         }
         
         // stage('Build Docker Image') {

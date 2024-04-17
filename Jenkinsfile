@@ -86,7 +86,7 @@ pipeline {
                     def warFileName = sh(script: 'ls target/*.war', returnStdout: true).trim()
                     def credentialsId = 'tomcat-credentials'
                     
-                    tomcatDeploy adapter: [credentialsId: credentialsId, url: tomcatUrl], war: warFileName
+                    deploy adapters: [tomcat9(credentialsId: credentialsId, url: tomcatUrl)], war: warFileName
                 }
             }
         }

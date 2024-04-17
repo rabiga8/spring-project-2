@@ -40,6 +40,13 @@ pipeline {
                 }
             }
         }
+
+           stage('7. Build Docker Image') {
+            steps {
+                // Build Docker image
+                sh 'docker build -t ${DOCKER_IMAGE_NAME} .'
+            }
+        }
         
         stage('4. Code Coverage Report') {
             steps {
@@ -81,12 +88,7 @@ pipeline {
         }
         
 
-        stage('7. Build Docker Image') {
-            steps {
-                // Build Docker image
-                sh 'docker build -t ${DOCKER_IMAGE_NAME} .'
-            }
-        }
+     
 
         stage('8. Dockerhub Login') {
             steps {
@@ -108,17 +110,6 @@ pipeline {
             }
         }
 
-        stage('9. Deploy to Tomcat') {
-            steps {
-                withMaven(globalMavenSettingsConfig: '', 
-                          jdk: '', maven: 'maven', 
-                          mavenSettingsConfig: '', 
-                          traceability: true) {
-                    // Add a step for your project’s build tool to release an artifact
-                    sh 'mvn deploy'
-                }
-            }
-        }
 
         stage('10. Dockerhub Push') {
             steps {

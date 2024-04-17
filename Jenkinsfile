@@ -80,18 +80,18 @@ pipeline {
         //     }
         // }
 
-        stage('Deploy to Tomcat') {
-            steps {
-                // Deploy the WAR file to Tomcat
-                script {
-                    def tomcatUrl = 'http://localhost:9999'
-                    def warFileName = sh(script: 'ls target/*.war', returnStdout: true).trim()
-                    def credentialsId = 'tomcat-credentials'
+        // stage('Deploy to Tomcat') {
+        //     steps {
+        //         // Deploy the WAR file to Tomcat
+        //         script {
+        //             def tomcatUrl = 'http://localhost:9999'
+        //             def warFileName = sh(script: 'ls target/*.war', returnStdout: true).trim()
+        //             def credentialsId = 'tomcat-credentials'
                     
-                    deploy adapters: [tomcat9(credentialsId: credentialsId, url: tomcatUrl)], war: warFileName
-                }
-            }
-        }
+        //             deploy adapters: [tomcat9(credentialsId: credentialsId, url: tomcatUrl)], war: warFileName
+        //         }
+        //     }
+        // }
 
         // Uncomment and customize stages as needed
         /*

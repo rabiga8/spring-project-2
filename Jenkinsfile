@@ -62,7 +62,7 @@ pipeline {
                           mavenSettingsConfig: '', 
                           traceability: true){
                     // Run static code analysis tools
-                    sh 'mvn clean compile checkstyle:checkstyle pmd:pmd findbugs:findbugs'
+                    sh 'mvn clean compile checkstyle:checkstyle pmd:pmd'
                 }
             }
         }

@@ -115,23 +115,19 @@ pipeline {
                 ]
             }
         }
-        
 
-     
+        stage('7. Deliver Mock') {
+            steps {
 
-        
-
-        // stage(' Deliver') {
-        //     steps {
-
-        //         withMaven(globalMavenSettingsConfig: '', 
-        //                   jdk: '', maven: 'maven', 
-        //                   mavenSettingsConfig: '', 
-        //                   traceability: true){
-        //             sh 'mvn deploy'
-        //         }
-        //     }
-        // }
+                withMaven(globalMavenSettingsConfig: '', 
+                          jdk: '', maven: 'maven', 
+                          mavenSettingsConfig: '', 
+                          traceability: true){
+                    // sh 'mvn deploy'
+                    sh 'echo "Deliver artifact step"'
+                }
+            }
+        }
         
         // stage('Deploy to Dev Env') {
         //     when {

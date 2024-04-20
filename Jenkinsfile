@@ -5,6 +5,7 @@ pipeline {
         DOCKER_IMAGE_NAME = 'rabiga8/group-image-2'
     }
     stages {
+        
         stage('1. Checkout') {
             steps {
                 // Check out the source code from GitHub
@@ -41,14 +42,14 @@ pipeline {
             }
         }
 
-           stage('7. Build Docker Image') {
+       stage('4. Build Docker Image') {
             steps {
                 // Build Docker image
                 sh 'docker build -t ${DOCKER_IMAGE_NAME} .'
             }
         }
 
-        stage('8. Dockerhub Login') {
+        stage('5. Dockerhub Login') {
             steps {
                 // Authenticate with Docker Hub using credentials
                 withCredentials([
@@ -69,7 +70,7 @@ pipeline {
         }
 
 
-        stage('10. Dockerhub Push') {
+        stage('6. Dockerhub Push') {
             steps {
                 // Push Docker image to Docker Hub
                 sh 'docker push ${DOCKER_IMAGE_NAME}:latest'
@@ -77,7 +78,7 @@ pipeline {
         }
         
         
-        stage('4. Code Coverage Report') {
+        stage('7. Code Coverage Report') {
             steps {
                 // Publish JaCoCo coverage report
                 jacoco(execPattern: 'target/jacoco.exec')
@@ -91,7 +92,7 @@ pipeline {
         }
 
         
-        stage('5. Static Code Analysis') {
+        stage('8. Static Code Analysis') {
             steps {
                 withMaven(globalMavenSettingsConfig: '', 
                           jdk: '', maven: 'maven', 
@@ -102,10 +103,8 @@ pipeline {
                 }
             }
         }
-
-
         
-        stage('6. Record Issues') {
+        stage('9. Record Issues') {
             steps {
                 // Record issues using the specified tools
                 recordIssues sourceCodeRetention: 'LAST_BUILD', tools: [
@@ -116,7 +115,7 @@ pipeline {
             }
         }
 
-        stage('7. Deliver Mock') {
+        stage('10. Deliver Mock') {
             steps {
 
                 withMaven(globalMavenSettingsConfig: '', 
@@ -129,69 +128,28 @@ pipeline {
             }
         }
         
-        // stage('Deploy to Dev Env') {
-        //     when {
-        //         branch 'develop' // Deploy only from the develop branch
-        //     }
-        //     steps {
-        //         sh 'kubectl apply -f dev.yaml' // Example command for Kubernetes deployment
-        //     }
-        // }
-        // stage('Deploy to QAT Env') {
-        //     when {
-        //         branch 'release/*' // Deploy only from release branches
-        //     }
-        //     steps {
-        //         // Step to deploy artifact to QAT environment
-        //         sh 'kubectl apply -f qat.yaml' // Example command for Kubernetes deployment
-        //     }
-        // }
-        // stage('Deploy to Staging Env') {
-        //     when {
-        //         branch 'staging' // Deploy only from the staging branch
-        //     }
-        //     steps {
-        //         // Step to deploy artifact to Staging environment
-        //         sh 'kubectl apply -f staging.yaml' // Example command for Kubernetes deployment
-        //     }
-        // }
-        // stage('Deploy to Production Env') {
-        //     when {
-        //         branch 'master' // Deploy only from the master branch
-        //     }
-        //     steps {
-        //         // Step to deploy artifact to Production environment
-        //         sh 'kubectl apply -f production.yaml' // Example command for Kubernetes deployment
-        //     }
-        // }
-
-        // stage('Deploy to Tomcat server') {
-        //     steps {
-        //         deploy adapters: [
-        //             tomcat9(
-        //                 credentialsId: 'tomcat-credentials',
-        //                 path: '',
-        //                 url: 'http://localhost:9999/'
-        //             )
-        //         ], contextPath: null, war: '**/*.war'
-        //     }
-        // }
-
-        // stage('Deploy to Tomcat') {
-        //     steps {
-        //         // Deploy the WAR file to Tomcat
-        //         script {
-        //             def tomcatUrl = 'http://localhost:9999'
-        //             def warFileName = sh(script: 'ls target/*.war', returnStdout: true).trim()
-        //             def credentialsId = 'tomcat-credentials'
-                    
-        //             deploy adapters: [tomcat9(credentialsId: credentialsId, url: tomcatUrl)], war: warFileName
-        //         }
-        //     }
-        // }
-
-   
+       stage('11. Deploy to Dev Mock') {
+            steps {
+                sh 'echo "Deploy to Dev step"'
+            }
+        }
         
+        stage('12. Deploy to QAT Mock') {
+            steps {
+                sh 'echo "Deploy to QAT step"'
+            }
+        }
         
+        stage('13. Deploy to Staging Mock') {
+            steps {
+                sh 'echo "Deploy to Staging step"'
+            }
+        }
+        
+        stage('14. Deploy to Production Mock') {
+            steps {
+                sh 'echo "Deploy to Production step"'
+            }
+        }
     }
 }
